@@ -180,7 +180,7 @@ public class XMLParser implements MappingsSource<Document> {
       definitionBuilder.stopOnErrors(Boolean.valueOf(getAttribute(ele, STOP_ON_ERRORS_ATTRIBUTE)));
     }
     if (StringUtils.isNotEmpty(getAttribute(ele, MAPID_ATTRIBUTE))) {
-      definitionBuilder.mapId(getAttribute(ele, MAPID_ATTRIBUTE));
+      definitionBuilder.context(getAttribute(ele, MAPID_ATTRIBUTE));
     }
     if (StringUtils.isNotEmpty(getAttribute(ele, TYPE_ATTRIBUTE))) {
       String mappingDirection = getAttribute(ele, TYPE_ATTRIBUTE);

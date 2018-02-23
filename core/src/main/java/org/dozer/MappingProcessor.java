@@ -15,21 +15,6 @@
  */
 package org.dozer;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.apache.commons.lang3.StringUtils;
 import org.dozer.builder.BuilderUtil;
 import org.dozer.builder.DestBeanBuilderCreator;
@@ -69,6 +54,21 @@ import org.dozer.util.MappingValidator;
 import org.dozer.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import static org.dozer.util.DozerConstants.BASE_CLASS;
 import static org.dozer.util.DozerConstants.ITERATE;
@@ -408,7 +408,7 @@ public class MappingProcessor implements Mapper {
 
     if (log.isDebugEnabled()) {
       log.debug(logMsgFactory.createFieldMappingSuccessMsg(srcObj.getClass(), destObj.getClass(), fieldMapping.getSrcFieldName(),
-          fieldMapping.getDestFieldName(), srcFieldValue, destFieldValue, fieldMapping.getClassMap().getMapId()));
+          fieldMapping.getDestFieldName(), srcFieldValue, destFieldValue, fieldMapping.getClassMap().getContexts()));
     }
   }
 
@@ -710,7 +710,7 @@ public class MappingProcessor implements Mapper {
     }
     if (log.isDebugEnabled()) {
       log.debug(logMsgFactory.createFieldMappingSuccessMsg(srcObj.getClass(), destObj.getClass(), fieldMapping.getSrcFieldName(),
-          fieldMapping.getDestFieldName(), srcFieldValue, null, fieldMapping.getClassMap().getMapId()));
+          fieldMapping.getDestFieldName(), srcFieldValue, null, fieldMapping.getClassMap().getContexts()));
     }
   }
   

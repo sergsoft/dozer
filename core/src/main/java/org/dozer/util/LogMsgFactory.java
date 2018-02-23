@@ -16,6 +16,7 @@
 package org.dozer.util;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -75,13 +76,13 @@ public final class LogMsgFactory {
   }
 
   public String createFieldMappingSuccessMsg(Class<?> srcClass, Class<?> destClass, String srcFieldName, String destFieldName,
-      Object srcFieldValue, Object destFieldValue, String classMapId) {
+      Object srcFieldValue, Object destFieldValue, Set<String> contexts) {
     String srcClassStr = MappingUtils.getClassNameWithoutPackage(srcClass);
     String destClassStr = MappingUtils.getClassNameWithoutPackage(destClass);
 
     return "MAPPED: " + srcClassStr + "." + srcFieldName + " --> " + destClassStr + "." + destFieldName + "    VALUES: "
-        + getLogOutput(srcFieldValue) + " --> " + getLogOutput(destFieldValue) + "    MAPID: "
-        + (classMapId != null ? classMapId : "");
+        + getLogOutput(srcFieldValue) + " --> " + getLogOutput(destFieldValue) + "    CONTEXTS: "
+        + (contexts != null ? contexts : "");
   }
 
   private String getLogOutput(Object object) {

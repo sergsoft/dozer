@@ -75,7 +75,7 @@ public final class MappingsParser {
     FieldMap fieldMapPrime;
     // need to create bi-directional mappings now.
     ClassMap classMapPrime;
-    Set<String> mapIds = new HashSet<String>();
+    Set<String> mapContexts = new HashSet<>();
     for (ClassMap classMap : classMaps) {
       classMap.setGlobalConfiguration(globalConfiguration);
 
@@ -85,14 +85,20 @@ public final class MappingsParser {
 
       // Check to see if this is a duplicate map id, irregardless of src and dest class names. 
       // Duplicate map-ids are not allowed
-      if (!MappingUtils.isBlankOrNull(classMap.getMapId())) {
-        if (mapIds.contains(classMap.getMapId())) {
-          throw new IllegalArgumentException("Duplicate Map Id's Found. Map Id: " + classMap.getMapId());
+      Set<String> contexts = classMap.getContexts();
+      if (!contexts.isEmpty()) {
+        for (String context: contexts) {
+          if (mapContexts.contains(context)) {
+            throw new IllegalArgumentException("Duplicate Map Id's Found. Map Id: " + context);
+          }
+          mapContexts.add(context);
+          result.add(classMap.getSrcClassToMap(), classMap.getDestClassToMap(), context, classMap);
         }
-        mapIds.add(classMap.getMapId());
       }
 
-      result.add(classMap.getSrcClassToMap(), classMap.getDestClassToMap(), classMap.getMapId(), classMap);
+      if (classMap.isDefaultContext()) {
+        result.add(classMap.getSrcClassToMap(), classMap.getDestClassToMap(), null, classMap);
+      }
       // now create class map prime
       classMapPrime = new ClassMap(globalConfiguration);
       MappingUtils.reverseFields(classMap, classMapPrime, beanContainer);
@@ -181,8 +187,15 @@ public final class MappingsParser {
       }
       // if it is a one way mapping or a method/iterate method mapping we can not bi-directionally map
       // Map Prime could actually be empty
+      // TODO sergsw I'm not sure about this changes
       if (!MappingDirection.ONE_WAY.equals(classMap.getType())) {
-        result.add(classMap.getDestClassToMap(), classMap.getSrcClassToMap(), classMap.getMapId(), classMapPrime);
+        ClassMap finalClassMapPrime = classMapPrime;
+        classMap.getContexts().forEach(context -> {
+          result.add(classMap.getDestClassToMap(), classMap.getSrcClassToMap(), context, finalClassMapPrime);
+        });
+        if (classMap.isDefaultContext()) {
+          result.add(classMap.getDestClassToMap(), classMap.getSrcClassToMap(), null, finalClassMapPrime);
+        }
       }
     }
     return result;

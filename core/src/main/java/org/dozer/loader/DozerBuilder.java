@@ -145,8 +145,8 @@ public class DozerBuilder {
       return this;
     }
 
-    public MappingBuilder mapId(String id) {
-      classMap.setMapId(id);
+    public MappingBuilder context(String context) {
+      classMap.addContext(context);
       return this;
     }
 

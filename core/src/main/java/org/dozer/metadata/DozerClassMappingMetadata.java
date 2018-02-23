@@ -17,6 +17,7 @@ package org.dozer.metadata;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.dozer.classmap.ClassMap;
 import org.dozer.classmap.MappingDirection;
@@ -86,8 +87,8 @@ public final class DozerClassMappingMetadata implements ClassMappingMetadata {
         return classMap.getType();
     }
 
-    public String getMapId() {
-        return classMap.getMapId();
+    public Set<String> getContexts() {
+        return classMap.getContexts();
     }
 
     public List<FieldMappingMetadata> getFieldMappings() {

@@ -15,6 +15,17 @@
  */
 package org.dozer.util;
 
+import org.dozer.MappingException;
+import org.dozer.cache.Cache;
+import org.dozer.classmap.ClassMap;
+import org.dozer.classmap.Configuration;
+import org.dozer.classmap.CopyByReferenceContainer;
+import org.dozer.classmap.DozerClass;
+import org.dozer.config.BeanContainer;
+import org.dozer.converters.CustomConverterContainer;
+import org.dozer.fieldmap.DozerField;
+import org.dozer.fieldmap.FieldMap;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,18 +37,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
-import org.dozer.MappingException;
-import org.dozer.cache.Cache;
-import org.dozer.classmap.ClassMap;
-import org.dozer.classmap.Configuration;
-import org.dozer.classmap.CopyByReferenceContainer;
-import org.dozer.classmap.DozerClass;
-import org.dozer.config.BeanContainer;
-import org.dozer.converters.CustomConverterContainer;
-import org.dozer.fieldmap.DozerField;
-import org.dozer.fieldmap.FieldMap;
 
 import static org.dozer.util.DozerConstants.BASE_CLASS;
 
@@ -181,8 +180,8 @@ public final class MappingUtils {
     destination.setAllowedExceptions(source.getAllowedExceptions());
     destination.setSrcClassCreateMethod(source.getDestClassCreateMethod());
     destination.setDestClassCreateMethod(source.getSrcClassCreateMethod());
-    if (StringUtils.isNotEmpty(source.getMapId())) {
-      destination.setMapId(source.getMapId());
+    if (!source.getContexts().isEmpty()) {
+      destination.setContexts(source.getContexts());
     }
   }
 

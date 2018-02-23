@@ -15,6 +15,9 @@
  */
 package org.dozer.classmap;
 
+import org.dozer.config.BeanContainer;
+import org.dozer.util.MappingUtils;
+
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,9 +25,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.commons.lang3.StringUtils;
-import org.dozer.config.BeanContainer;
-import org.dozer.util.MappingUtils;
+import static org.dozer.classmap.SupportPriority.NONE;
 
 /**
  * Internal class that determines the appropriate class mapping to be used for
@@ -72,7 +73,7 @@ public class ClassMappings {
   public void failOnDuplicate(Object result, ClassMap classMap) {
     if (result != null && !classMap.getSrcClassName().equals(classMap.getDestClassName())) {
       throw new IllegalArgumentException("Duplicate Class Mapping Found. Source: " + classMap.getSrcClassName()
-              + " Destination: " + classMap.getDestClassName() + " map-id: " + classMap.getMapId());
+              + " Destination: " + classMap.getDestClassName() + " context: " + classMap.getContexts());
     }
   }
 
@@ -111,14 +112,22 @@ public class ClassMappings {
     // if the mapId is not null looking up a map is easy
     if (!MappingUtils.isBlankOrNull(mapId) && mapping == null) {
       // probably a more efficient way to do this...
+      SupportPriority supportPriority = NONE;
+      ClassMap retClassMap = null;
       for (Entry<String, ClassMap> entry : classMappings.entrySet()) {
         ClassMap classMap = entry.getValue();
-        if (StringUtils.equals(classMap.getMapId(), mapId)
-                && classMap.getSrcClassToMap().isAssignableFrom(srcClass)
-                && classMap.getDestClassToMap().isAssignableFrom(destClass)) {
-          return classMap;
-        } else if (StringUtils.equals(classMap.getMapId(), mapId) && srcClass.equals(destClass)) {
-          return classMap;
+        SupportPriority priority = classMap.supportContext(mapId);
+        if(priority.greaterThan(supportPriority)) {
+          if ( (classMap.getSrcClassToMap().isAssignableFrom(srcClass)
+                  && classMap.getDestClassToMap().isAssignableFrom(destClass))
+                  || srcClass.equals(destClass)) {
+            supportPriority = priority;
+            retClassMap = classMap;
+          }
+        }
+
+        if (retClassMap != null) {
+          return retClassMap;
         }
       }
 
@@ -135,33 +144,38 @@ public class ClassMappings {
     // while iterating over the custom mappings.
     // See bug #1550275.
     Object[] keys = classMappings.keySet().toArray();
+
+    SupportPriority supportPriority = NONE;
+    ClassMap retClassMap = null;
     for (Object key : keys) {
       ClassMap map = classMappings.get(key);
       Class<?> mappingDestClass = map.getDestClassToMap();
       Class<?> mappingSrcClass = map.getSrcClassToMap();
 
-      if ((mapId == null && map.getMapId() != null) || (mapId != null && !mapId.equals(map.getMapId()))) {
-        continue;
-      }
+      SupportPriority priority = map.supportContext(mapId);
+      if (priority.greaterThan(supportPriority)) {
 
-      if (isInterfaceImplementation(srcClass, mappingSrcClass)) {
-        if (isInterfaceImplementation(destClass, mappingDestClass)) {
-          return map;
-        } else if (destClass.equals(mappingDestClass)) {
-          return map;
+        if (isInterfaceImplementation(srcClass, mappingSrcClass)) {
+          if (isInterfaceImplementation(destClass, mappingDestClass)) {
+            supportPriority = priority;
+            retClassMap = map;
+          } else if (destClass.equals(mappingDestClass)) {
+            supportPriority = priority;
+            retClassMap = map;
+          }
+        }
+
+        // Destination could be an abstract type. Picking up the best concrete type to use.
+        if ((destClass.isAssignableFrom(mappingDestClass) && isAbstract(destClass)) ||
+                (isInterfaceImplementation(destClass, mappingDestClass))) {
+          if (MappingUtils.getRealClass(srcClass, beanContainer).equals(mappingSrcClass)) {
+            supportPriority = priority;
+            retClassMap = map;
+          }
         }
       }
-
-      // Destination could be an abstract type. Picking up the best concrete type to use.
-      if ((destClass.isAssignableFrom(mappingDestClass) && isAbstract(destClass)) ||
-              (isInterfaceImplementation(destClass, mappingDestClass))) {
-        if (MappingUtils.getRealClass(srcClass, beanContainer).equals(mappingSrcClass)) {
-          return map;
-        }
-      }
-
     }
-    return null;
+    return retClassMap;
   }
 
   private boolean isInterfaceImplementation(Class<?> type, Class<?> mappingType) {

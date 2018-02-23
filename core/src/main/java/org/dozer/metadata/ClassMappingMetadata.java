@@ -16,6 +16,7 @@
 package org.dozer.metadata;
 
 import java.util.List;
+import java.util.Set;
 
 import org.dozer.classmap.MappingDirection;
 
@@ -113,11 +114,11 @@ public interface ClassMappingMetadata {
     MappingDirection getMappingDirection();
 
     /**
-     * Returns the map id of this mapping definition used for contextual mapping selection.
+     * Returns the set of this mapping definition used for contextual mapping selection.
      * 
-     * @return The identifier as a string.
+     * @return The identifier as a set of string.
      */
-    String getMapId();
+    Set<String> getContexts();
 
     /**
      * Gets a list of all field mapping definitions that are used for the mapping of the classes.

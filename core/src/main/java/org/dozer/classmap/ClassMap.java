@@ -15,15 +15,22 @@
  */
 package org.dozer.classmap;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.dozer.converters.CustomConverterContainer;
 import org.dozer.fieldmap.FieldMap;
 import org.dozer.util.DozerConstants;
 import org.dozer.util.MappingUtils;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static java.util.Arrays.asList;
+import static org.dozer.classmap.SupportPriority.HIGH;
+import static org.dozer.classmap.SupportPriority.LOW;
+import static org.dozer.classmap.SupportPriority.NONE;
 
 /**
  * Internal class that represents a class mapping definition. Holds all of the information about a single class mapping.
@@ -50,7 +57,8 @@ public class ClassMap {
   private Boolean stopOnErrors;
   private Boolean trimStrings;
   private CustomConverterContainer customConverters;
-  private String mapId;
+  private final Set<String> contexts = new HashSet<>();
+  private boolean defaultContext;
   private RelationshipType relationshipType;
 
   public ClassMap(Configuration globalConfiguration) {
@@ -291,12 +299,16 @@ public class ClassMap {
     this.beanFactory = beanFactory;
   }
 
-  public String getMapId() {
-    return mapId;
+  public Set<String> getContexts() {
+    return contexts;
   }
 
-  public void setMapId(String mapId) {
-    this.mapId = mapId;
+  public void addContext(String context) {
+    this.contexts.add(context);
+  }
+
+  public void addContexts(String... contexts) {
+    this.contexts.addAll(asList(contexts));
   }
 
   public void setMapNull(boolean mapNull) {
@@ -334,6 +346,26 @@ public class ClassMap {
   @Override
   public String toString() {
     return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("source class", getSrcClassName()).append(
-        "destination class", getDestClassName()).append("map-id", mapId).toString();
+        "destination class", getDestClassName()).append("contexts", contexts).toString();
+  }
+
+  public SupportPriority supportContext(String context) {
+    if( contexts.contains(context)) {
+      return HIGH;
+    }
+    return defaultContext || contexts.isEmpty() ? LOW : NONE;
+  }
+
+  public void setDefaultContext(boolean defaultContext) {
+    this.defaultContext = defaultContext;
+  }
+
+  public boolean isDefaultContext() {
+    return defaultContext;
+  }
+
+  public void setContexts(Set<String> contexts) {
+    this.contexts.clear();
+    this.contexts.addAll(contexts);
   }
 }

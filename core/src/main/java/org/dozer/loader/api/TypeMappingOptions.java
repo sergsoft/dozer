@@ -33,7 +33,7 @@ public final class TypeMappingOptions {
     public static TypeMappingOption mapId(final String mapId) {
         return new TypeMappingOption() {
             public void apply(DozerBuilder.MappingBuilder fieldMappingBuilder) {
-                fieldMappingBuilder.mapId(mapId);
+                fieldMappingBuilder.context(mapId);
             }
         };
     }
