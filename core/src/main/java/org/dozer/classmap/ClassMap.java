@@ -353,7 +353,7 @@ public class ClassMap {
     if( contexts.contains(context)) {
       return HIGH;
     }
-    return defaultContext || contexts.isEmpty() ? LOW : NONE;
+    return isDefaultContext() ? LOW : NONE;
   }
 
   public void setDefaultContext(boolean defaultContext) {
