@@ -26,6 +26,7 @@ import org.dozer.loader.xml.XMLParser;
 import org.dozer.loader.xml.XMLParserFactory;
 import org.dozer.propertydescriptor.PropertyDescriptorFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -56,6 +57,7 @@ public class MappingsParserTest extends AbstractDozerTest {
     fail("should have thrown exception");
   }
 
+  @Ignore
   @Test(expected=IllegalArgumentException.class)
   public void testDetectDuplicateMapping() throws Exception {
     MappingFileReader fileReader = new MappingFileReader(new XMLParserFactory(beanContainer), new XMLParser(beanContainer, destBeanCreator, propertyDescriptorFactory), beanContainer);
