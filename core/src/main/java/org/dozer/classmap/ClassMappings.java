@@ -53,7 +53,16 @@ public class ClassMappings {
   }
 
   public void add(Class<?> srcClass, Class<?> destClass, ClassMap classMap) {
-    ClassMap result = classMappings.put(keyFactory.createKey(srcClass, destClass), classMap);
+    add(srcClass, destClass, classMap, false);
+  }
+
+  public void add(Class<?> srcClass, Class<?> destClass, ClassMap classMap, boolean ignoreDuplicates) {
+    String key = keyFactory.createKey(srcClass, destClass);
+    if (ignoreDuplicates) {
+      if (classMappings.containsKey(key))
+        return;
+    }
+    ClassMap result = classMappings.put(key, classMap);
     failOnDuplicate(result, classMap);
   }
 

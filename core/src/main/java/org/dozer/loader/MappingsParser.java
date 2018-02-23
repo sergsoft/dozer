@@ -15,10 +15,6 @@
  */
 package org.dozer.loader;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.dozer.classmap.ClassMap;
 import org.dozer.classmap.ClassMappings;
 import org.dozer.classmap.Configuration;
@@ -34,6 +30,10 @@ import org.dozer.propertydescriptor.PropertyDescriptorFactory;
 import org.dozer.util.DozerConstants;
 import org.dozer.util.MappingUtils;
 import org.dozer.util.ReflectionUtils;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.dozer.util.MappingUtils.isSupportedMap;
 
@@ -97,7 +97,7 @@ public final class MappingsParser {
       }
 
       if (classMap.isDefaultContext()) {
-        result.add(classMap.getSrcClassToMap(), classMap.getDestClassToMap(), null, classMap);
+        result.add(classMap.getSrcClassToMap(), classMap.getDestClassToMap(), classMap, true);
       }
       // now create class map prime
       classMapPrime = new ClassMap(globalConfiguration);
@@ -194,7 +194,7 @@ public final class MappingsParser {
           result.add(classMap.getDestClassToMap(), classMap.getSrcClassToMap(), context, finalClassMapPrime);
         });
         if (classMap.isDefaultContext()) {
-          result.add(classMap.getDestClassToMap(), classMap.getSrcClassToMap(), null, finalClassMapPrime);
+          result.add(classMap.getDestClassToMap(), classMap.getSrcClassToMap(), finalClassMapPrime, true);
         }
       }
     }

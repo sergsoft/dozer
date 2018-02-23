@@ -58,7 +58,7 @@ public class ClassMap {
   private Boolean trimStrings;
   private CustomConverterContainer customConverters;
   private final Set<String> contexts = new HashSet<>();
-  private boolean defaultContext;
+  private Boolean defaultContext;
   private RelationshipType relationshipType;
 
   public ClassMap(Configuration globalConfiguration) {
@@ -361,7 +361,7 @@ public class ClassMap {
   }
 
   public boolean isDefaultContext() {
-    return defaultContext;
+    return defaultContext != null ? defaultContext : contexts.isEmpty();
   }
 
   public void setContexts(Set<String> contexts) {
