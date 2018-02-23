@@ -20,7 +20,7 @@ import org.dozer.loader.DozerBuilder;
 /**
  * @author Dmitry Buzdin
  */
-public final class TypeMappingBuilder {
+public class TypeMappingBuilder {
 
   private DozerBuilder.MappingBuilder beanMappingBuilder;
 
