@@ -46,7 +46,7 @@ public class MapFieldMapTest extends AbstractDozerTest {
     source.setDestField(new DozerField("name", "type"));
     source.setDestHintContainer(new HintContainer(beanContainer));
     source.setDestDeepIndexHintContainer(new HintContainer(beanContainer));
-    source.setMapId("mapId");
+    source.addContext("mapId");
     source.setRelationshipType(RelationshipType.NON_CUMULATIVE);
     source.setRemoveOrphans(true);
     source.setSrcField(new DozerField("name", "type"));
@@ -63,7 +63,7 @@ public class MapFieldMapTest extends AbstractDozerTest {
     assertEquals(source.getDestField(), result.getDestField());
     assertEquals(source.getDestHintContainer(), result.getDestHintContainer());
     assertEquals(source.getDestDeepIndexHintContainer(), result.getDestDeepIndexHintContainer());
-    assertEquals(source.getMapId(), result.getMapId());
+    assertEquals(source.getContexts(), result.getContexts());
     assertEquals(source.getRelationshipType(), result.getRelationshipType());
     assertEquals(source.isRemoveOrphans(), result.isRemoveOrphans());
     assertEquals(source.getSrcField(), result.getSrcField());

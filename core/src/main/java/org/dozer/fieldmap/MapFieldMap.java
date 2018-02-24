@@ -26,6 +26,8 @@ import org.dozer.propertydescriptor.PropertyDescriptorFactory;
 import org.dozer.util.DozerConstants;
 import org.dozer.util.MappingUtils;
 
+import java.util.Set;
+
 /**
  * Only intended for internal use. Handles field mapping involving Map Backed properties. Map backed property support
  * includes top level class Map data type, field level Map data type, and custom Map backed objects that provide custom
@@ -52,13 +54,19 @@ public class MapFieldMap extends FieldMap {
     setDestField(fieldMap.getDestField());
     setDestHintContainer(fieldMap.getDestHintContainer());
     setDestDeepIndexHintContainer(fieldMap.getDestDeepIndexHintContainer());
-    setMapId(fieldMap.getMapId());
+    addContexts(fieldMap.getContexts());
+    setForceContext(fieldMap.getForceContext());
+    setDefaultContext(fieldMap.isDefaultContext());
     setRelationshipType(fieldMap.getRelationshipType());
     setRemoveOrphans(fieldMap.isRemoveOrphans());
     setSrcField(fieldMap.getSrcField());
     setSrcHintContainer(fieldMap.getSrcHintContainer());
     setSrcDeepIndexHintContainer(fieldMap.getSrcDeepIndexHintContainer());
     setType(fieldMap.getType());
+  }
+
+  private void addContexts(Set<String> contexts) {
+    contexts.forEach(this::addContext);
   }
 
   @Override
@@ -96,7 +104,7 @@ public class MapFieldMap extends FieldMap {
     } else {
       Class<?> actualType = determineActualPropertyType(getSrcFieldName(), isSrcFieldIndexed(), getSrcFieldIndex(), srcObj, false);
       if ((getSrcFieldMapGetMethod() != null)
-          || (this.getMapId() == null && MappingUtils.isSupportedMap(actualType) && getSrcHintContainer() == null)) {
+          || (getForceContext() == null && MappingUtils.isSupportedMap(actualType) && getSrcHintContainer() == null)) {
         // Need to dig out actual map object by using getter on the field. Use actual map object to get the field value
         targetObject = super.getSrcFieldValue(srcObj);
 

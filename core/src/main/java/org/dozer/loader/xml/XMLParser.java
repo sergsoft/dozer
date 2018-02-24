@@ -282,7 +282,7 @@ public class XMLParser implements MappingsSource<Document> {
       fieldMapBuilder.copyByReference(BooleanUtils.toBoolean(getAttribute(ele, COPY_BY_REFERENCE_ATTRIBUTE)));
     }
     if (StringUtils.isNotEmpty(getAttribute(ele, MAPID_ATTRIBUTE))) {
-      fieldMapBuilder.mapId(getAttribute(ele, MAPID_ATTRIBUTE));
+      fieldMapBuilder.forceContext(getAttribute(ele, MAPID_ATTRIBUTE));
     }
     if (StringUtils.isNotEmpty(getAttribute(ele, TYPE_ATTRIBUTE))) {
       String mappingDirection = getAttribute(ele, TYPE_ATTRIBUTE);

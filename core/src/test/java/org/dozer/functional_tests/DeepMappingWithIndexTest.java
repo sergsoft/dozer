@@ -174,7 +174,7 @@ public class DeepMappingWithIndexTest extends AbstractFunctionalTest {
 
   @Test
   public void testDeepMapIndexedIsAccessible() throws Exception {
-    mapper = getMapper(new String[] {"mappings/deepMappingWithIndexAndIsAccessible.xml"});
+    mapper = getMapper("mappings/deepMappingWithIndexAndIsAccessible.xml");
 
     Person source = newInstance(Person.class);
     Vector<Phone> phonesList = new Vector<Phone>();
@@ -185,19 +185,19 @@ public class DeepMappingWithIndexTest extends AbstractFunctionalTest {
     FlatPerson dest = newInstance(FlatPerson.class);
 
     mapper.map(source, dest);
-    assertEquals(dest.getPhoneNumber(), source.phones.get(0).getNumber());
+    assertEquals(source.phones.get(0).getNumber(), dest.getPhoneNumber());
   }
 
   @Test
   public void testDeepMapIndexedIsAccessibleInversed() throws Exception {
-    mapper = getMapper(new String[] {"mappings/deepMappingWithIndexAndIsAccessible.xml"});
+    mapper = getMapper("mappings/deepMappingWithIndexAndIsAccessible.xml");
 
     FlatPerson source = newInstance(FlatPerson.class);
     source.setPhoneNumber("911");
     Person dest = newInstance(Person.class);
 
     mapper.map(source, dest);
-    assertEquals(dest.phones.get(0).getNumber(), source.getPhoneNumber());
+    assertEquals(source.getPhoneNumber(), dest.phones.get(0).getNumber());
   }
 
   /**

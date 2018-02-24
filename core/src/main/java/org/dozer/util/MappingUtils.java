@@ -152,7 +152,7 @@ public final class MappingUtils {
 
     reversed.setCustomConverter(source.getCustomConverter());
     reversed.setCustomConverterId(source.getCustomConverterId());
-    reversed.setMapId(source.getMapId());
+    reversed.setContexts(source.getContexts());
     reversed.setRelationshipType(source.getRelationshipType());
     reversed.setRemoveOrphans(source.isRemoveOrphans());
     reversed.setSrcHintContainer(source.getDestHintContainer());

@@ -69,7 +69,7 @@ public final class LogMsgFactory {
       log.warn("Unable to determine dest field type when build log.error message");
     }
 
-    return "Field mapping error -->" + "\n  MapId: " + fieldMapping.getMapId() + "\n  Type: " + fieldMapping.getType()
+    return "Field mapping error -->" + "\n  Contexts: " + fieldMapping.getContexts() + "\n  Type: " + fieldMapping.getType()
         + "\n  Source parent class: " + srcClassName + "\n  Source field name: " + fieldMapping.getSrcFieldName()
         + "\n  Source field type: " + srcValueType + "\n  Source field value: " + srcFieldValueString + "\n  Dest parent class: "
         + destClassName + "\n  Dest field name: " + fieldMapping.getDestFieldName() + "\n  Dest field type: " + destFieldTypeName;

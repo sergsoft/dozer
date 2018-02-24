@@ -81,7 +81,7 @@ public final class FieldsMappingOptions {
     public static FieldsMappingOption useMapId(final String mapId) {
         return new FieldsMappingOption() {
             public void apply(DozerBuilder.FieldMappingBuilder fieldMappingBuilder) {
-                fieldMappingBuilder.mapId(mapId);
+                fieldMappingBuilder.forceContext(mapId);
             }
         };
     }

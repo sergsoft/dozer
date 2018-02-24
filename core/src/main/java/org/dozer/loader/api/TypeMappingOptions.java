@@ -30,6 +30,18 @@ public final class TypeMappingOptions {
 
     }
 
+    public static TypeMappingOption defaultMapper() {
+        return defaultMapper(true);
+    }
+
+    public static TypeMappingOption defaultMapper(final boolean defaultMap) {
+        return new TypeMappingOption() {
+            public void apply(DozerBuilder.MappingBuilder fieldMappingBuilder) {
+                fieldMappingBuilder.defaultMapper(defaultMap);
+            }
+        };
+    }
+
     public static TypeMappingOption mapId(final String mapId) {
         return new TypeMappingOption() {
             public void apply(DozerBuilder.MappingBuilder fieldMappingBuilder) {

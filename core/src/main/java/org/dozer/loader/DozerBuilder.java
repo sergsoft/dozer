@@ -16,7 +16,9 @@
 package org.dozer.loader;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dozer.CustomConverter;
@@ -198,6 +200,9 @@ public class DozerBuilder {
       }
     }
 
+    public void defaultMapper(boolean defaultMap) {
+      classMap.setDefaultContext(defaultMap);
+    }
   }
 
   public interface FieldBuider {
@@ -253,7 +258,7 @@ public class DozerBuilder {
     private HintContainer srcDeepIndexHintContainer;
     private HintContainer destDeepIndexHintContainer;
     private boolean copyByReference;
-    private String mapId;
+    private Set<String> contexts = new HashSet<>();
     private String customConverter;
     private String customConverterId;
     private String customConverterParam;
@@ -262,6 +267,7 @@ public class DozerBuilder {
     private final BeanContainer beanContainer;
     private final DestBeanCreator destBeanCreator;
     private final PropertyDescriptorFactory propertyDescriptorFactory;
+    private String forceContext;
 
     public FieldMappingBuilder(ClassMap classMap, BeanContainer beanContainer, DestBeanCreator destBeanCreator, PropertyDescriptorFactory propertyDescriptorFactory) {
       this.classMap = classMap;
@@ -331,8 +337,8 @@ public class DozerBuilder {
       this.copyByReference = value;
     }
 
-    public void mapId(String attribute) {
-      this.mapId = attribute;
+    public void addContext(String context) {
+      contexts.add(context);
     }
 
     public void customConverter(Class<? extends CustomConverter> type) {
@@ -377,7 +383,8 @@ public class DozerBuilder {
       if (copyByReferenceSet) {
         result.setCopyByReference(copyByReference);
       }
-      result.setMapId(mapId);
+      result.setContexts(contexts);
+      result.setForceContext(forceContext);
 
       result.setCustomConverter(customConverter);
       result.setCustomConverterId(customConverterId);
@@ -386,6 +393,9 @@ public class DozerBuilder {
       classMap.addFieldMapping(result);
     }
 
+    public void forceContext(String forceContext) {
+      this.forceContext = forceContext;
+    }
   }
 
   public static class FieldDefinitionBuilder {

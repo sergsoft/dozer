@@ -15,6 +15,8 @@
  */
 package org.dozer.fieldmap;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -23,10 +25,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.dozer.BeanBuilder;
 import org.dozer.MappingException;
 import org.dozer.builder.BuilderUtil;
-import org.dozer.classmap.ClassMap;
-import org.dozer.classmap.DozerClass;
-import org.dozer.classmap.MappingDirection;
-import org.dozer.classmap.RelationshipType;
+import org.dozer.classmap.*;
 import org.dozer.config.BeanContainer;
 import org.dozer.factory.DestBeanCreator;
 import org.dozer.propertydescriptor.DozerPropertyDescriptor;
@@ -36,6 +35,10 @@ import org.dozer.util.DozerConstants;
 import org.dozer.util.MappingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.dozer.classmap.SupportPriority.HIGH;
+import static org.dozer.classmap.SupportPriority.LOW;
+import static org.dozer.classmap.SupportPriority.NONE;
 
 /**
  * Internal class that represents a field mapping definition. Holds all of the information about a single field mapping
@@ -65,7 +68,11 @@ public abstract class FieldMap implements Cloneable {
   private MappingDirection type;
   private boolean copyByReference;
   private boolean copyByReferenceOveridden;
-  private String mapId;
+  private Set<String> contexts = new HashSet<>();
+  private boolean defaultContext = false;
+
+  // old mapId
+  private String forceContext;
   private String customConverter;
   private String customConverterId;
   private String customConverterParam;
@@ -352,12 +359,27 @@ public abstract class FieldMap implements Cloneable {
     return copyByReferenceOveridden;
   }
 
-  public String getMapId() {
-    return mapId;
+  public Set<String> getContexts() {
+    return contexts;
   }
 
-  public void setMapId(String mapId) {
-    this.mapId = mapId;
+  public void addContext(String context) {
+    contexts.contains(context);
+  }
+
+  public SupportPriority supportContext(String context) {
+    if( contexts.contains(context)) {
+      return HIGH;
+    }
+    return isDefaultContext() ? LOW : NONE;
+  }
+
+  public boolean isDefaultContext() {
+    return defaultContext || contexts.isEmpty();
+  }
+
+  public void setDefaultContext(boolean defaultContext) {
+    this.defaultContext = defaultContext;
   }
 
   public String getCustomConverter() {
@@ -485,11 +507,20 @@ public abstract class FieldMap implements Cloneable {
 
   @Override
   public String toString() {
-    return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("source field", srcField).append("destination field",
-        destField).append("type", type).append("customConverter", customConverter).append("relationshipType", relationshipType)
-        .append("removeOrphans", removeOrphans).append("mapId", mapId).append("copyByReference", copyByReference).append(
-            "copyByReferenceOveridden", copyByReferenceOveridden).append("srcTypeHint", srcHintContainer).append("destTypeHint",
-            destHintContainer).toString();
+    return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+            .append("source field", srcField)
+            .append("destination field",destField)
+            .append("type", type)
+            .append("customConverter", customConverter)
+            .append("relationshipType", relationshipType)
+            .append("removeOrphans", removeOrphans)
+            .append("contexts", contexts)
+            .append("isDefContext", isDefaultContext())
+            .append("copyByReference", copyByReference)
+            .append("copyByReferenceOveridden", copyByReferenceOveridden)
+            .append("srcTypeHint", srcHintContainer)
+            .append("destTypeHint",destHintContainer)
+            .toString();
   }
 
   public String getCustomConverterParam() {
@@ -500,4 +531,19 @@ public abstract class FieldMap implements Cloneable {
       this.customConverterParam = customConverterParam;
   }
 
+  public void setContexts(Set<String> contexts) {
+    this.contexts.addAll(contexts);
+  }
+
+  public String getForceContext() {
+    return forceContext;
+  }
+
+  public void setForceContext(String forceContext) {
+    this.forceContext = forceContext;
+  }
+
+  public String calcContext(String context) {
+    return forceContext != null ? forceContext : context;
+  }
 }
