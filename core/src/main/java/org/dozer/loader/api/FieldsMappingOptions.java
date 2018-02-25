@@ -86,6 +86,14 @@ public final class FieldsMappingOptions {
         };
     }
 
+    public static FieldsMappingOption context(final String context) {
+        return new FieldsMappingOption() {
+            public void apply(DozerBuilder.FieldMappingBuilder fieldMappingBuilder) {
+                fieldMappingBuilder.addContext(context);
+            }
+        };
+    }
+
     public static FieldsMappingOption oneWay() {
         return new FieldsMappingOption() {
             public void apply(DozerBuilder.FieldMappingBuilder fieldMappingBuilder) {

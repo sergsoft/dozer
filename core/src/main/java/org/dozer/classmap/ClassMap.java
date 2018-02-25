@@ -26,8 +26,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.dozer.classmap.SupportPriority.HIGH;
 import static org.dozer.classmap.SupportPriority.LOW;
 import static org.dozer.classmap.SupportPriority.NONE;
@@ -63,6 +65,12 @@ public class ClassMap {
 
   public ClassMap(Configuration globalConfiguration) {
     this.globalConfiguration = globalConfiguration;
+  }
+
+  public List<FieldMap> getApplicableFieldMaps(String context) {
+    return fieldMaps.stream()
+            .filter(fieldMap -> fieldMap.isApplicable(context))
+            .collect(toList());
   }
 
   public List<FieldMap> getFieldMaps() {

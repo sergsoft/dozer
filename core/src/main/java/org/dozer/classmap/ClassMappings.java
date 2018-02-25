@@ -127,9 +127,8 @@ public class ClassMappings {
         ClassMap classMap = entry.getValue();
         SupportPriority priority = classMap.supportContext(mapId);
         if(priority.greaterThan(supportPriority)) {
-          if ( (classMap.getSrcClassToMap().isAssignableFrom(srcClass)
-                  && classMap.getDestClassToMap().isAssignableFrom(destClass))
-                  || srcClass.equals(destClass)) {
+          if ( classMap.getSrcClassToMap().isAssignableFrom(srcClass)
+                  && classMap.getDestClassToMap().isAssignableFrom(destClass) ) {
             supportPriority = priority;
             retClassMap = classMap;
           }
@@ -140,8 +139,9 @@ public class ClassMappings {
         }
       }
 
+      // modern contract had been changed, now it's valid situation
       // If map-id was specified and mapping was not found, then fail
-      MappingUtils.throwMappingException("Class mapping not found by map-id: " + key);
+      //MappingUtils.throwMappingException("Class mapping not found by map-id: " + key);
     }
 
     return mapping;

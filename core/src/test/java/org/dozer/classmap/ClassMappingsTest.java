@@ -20,7 +20,9 @@ import java.util.Map;
 import org.dozer.AbstractDozerTest;
 import org.dozer.MappingException;
 import org.dozer.config.BeanContainer;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.mockito.Mockito.mock;
@@ -57,9 +59,9 @@ public class ClassMappingsTest extends AbstractDozerTest{
     assertNotNull(result);
   }
 
-  @Test(expected = MappingException.class)
+  @Test(/*expected = MappingException.class*/)
   public void testNotFoundByMapid() {
-    classMappings.find(NestedClass.class, String.class, "A");
+    Assert.assertNull(classMappings.find(NestedClass.class, String.class, "A"));
   }
 
   @Test

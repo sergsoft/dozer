@@ -546,4 +546,8 @@ public abstract class FieldMap implements Cloneable {
   public String calcContext(String context) {
     return forceContext != null ? forceContext : context;
   }
+
+  public boolean isApplicable(String context) {
+    return !NONE.equals(supportContext(context));
+  }
 }

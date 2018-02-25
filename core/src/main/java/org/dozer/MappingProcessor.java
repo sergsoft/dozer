@@ -204,7 +204,7 @@ public class MappingProcessor implements Mapper {
               classMap.getDestClassBeanFactory(), classMap.getDestClassBeanFactoryId(), classMap.getDestClassCreateMethod(),
               classMap.getDestClass().isSkipConstructor());
 
-      result = createByCreationDirectiveAndMap(creationDirective, classMap, srcObj, result, false, null);
+      result = createByCreationDirectiveAndMap(creationDirective, classMap, srcObj, result, false, mapId);
     } catch (Throwable e) {
       MappingUtils.throwMappingException(e);
     }
@@ -301,7 +301,7 @@ public class MappingProcessor implements Mapper {
     }
 
     // Perform mappings for each field. Iterate through Fields Maps for this class mapping
-    for (FieldMap fieldMapping : classMap.getFieldMaps()) {
+    for (FieldMap fieldMapping : classMap.getApplicableFieldMaps(mapId)) {
       //Bypass field if it has already been mapped as part of super class mappings.
       String key = MappingUtils.getMappedParentFieldKey(destObj, fieldMapping);
       if (mappedParentFields != null && mappedParentFields.contains(key)) {
@@ -1101,7 +1101,7 @@ public class MappingProcessor implements Mapper {
   private void processSuperTypeMapping(Collection<ClassMap> superClasses, Object srcObj, Object destObj, List<String> mappedParentFields, String mapId) {
     for (ClassMap map : superClasses) {
       map(map, srcObj, destObj, true, mappedParentFields ,mapId);
-      for (FieldMap fieldMapping : map.getFieldMaps()) {
+      for (FieldMap fieldMapping : map.getApplicableFieldMaps(mapId)) {
         String key = MappingUtils.getMappedParentFieldKey(destObj, fieldMapping);
         mappedParentFields.add(key);
       }
