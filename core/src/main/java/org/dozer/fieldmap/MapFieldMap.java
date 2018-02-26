@@ -55,6 +55,7 @@ public class MapFieldMap extends FieldMap {
     setDestHintContainer(fieldMap.getDestHintContainer());
     setDestDeepIndexHintContainer(fieldMap.getDestDeepIndexHintContainer());
     addContexts(fieldMap.getContexts());
+    setExcludedContexts(fieldMap.getExcludedContexts());
     setForceContext(fieldMap.getForceContext());
     setDefaultContext(fieldMap.isDefaultContext());
     setRelationshipType(fieldMap.getRelationshipType());

@@ -87,11 +87,7 @@ public final class FieldsMappingOptions {
     }
 
     public static FieldsMappingOption context(final String context) {
-        return new FieldsMappingOption() {
-            public void apply(DozerBuilder.FieldMappingBuilder fieldMappingBuilder) {
-                fieldMappingBuilder.addContext(context);
-            }
-        };
+        return new FieldsContextMappingOption(context);
     }
 
     public static FieldsMappingOption excludeContext(final String context) {
@@ -182,5 +178,21 @@ public final class FieldsMappingOptions {
                 fieldMappingBuilder.relationshipType(relationshipType);
             }
         };
+    }
+
+    static class FieldsContextMappingOption implements FieldsMappingOption {
+        private final String context;
+
+        public FieldsContextMappingOption(String context) {
+            this.context = context;
+        }
+
+        public void apply(DozerBuilder.FieldMappingBuilder fieldMappingBuilder) {
+            fieldMappingBuilder.addContext(context);
+        }
+
+        public String getContext() {
+            return context;
+        }
     }
 }

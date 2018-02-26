@@ -9,6 +9,7 @@ import org.dozer.vo.cumulative.Book;
 import org.dozer.vo.cumulative.BookPrime;
 import org.dozer.vo.cumulative.Library;
 import org.dozer.vo.cumulative.LibraryPrime;
+import org.junit.Before;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;
@@ -22,12 +23,17 @@ import static org.junit.Assert.assertNull;
 
 public class DozerV7ContextBaseTest {
 
-    private final Mapper mapper = initMapper();
+    private Mapper mapper;
 
-    private static Mapper initMapper() {
+    private static Mapper initMapper(BeanMappingBuilder beanMappingBuilder) {
         return DozerBeanMapperBuilder.create()
-                .withMappingBuilder(new V7ContextMapping())
+                .withMappingBuilder(beanMappingBuilder)
                 .build();
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        mapper = initMapper(new V7ContextMapping());
     }
 
     @Test
@@ -50,6 +56,10 @@ public class DozerV7ContextBaseTest {
 
     @Test
     public void fieldsWithDefContextAndExplicitContext() {
+        testContextTest();
+    }
+
+    private void testContextTest() {
         Library library = makeLibrary();
 
         LibraryPrime libraryPrime = mapper.map(library, LibraryPrime.class, "test");
@@ -60,7 +70,13 @@ public class DozerV7ContextBaseTest {
         assertNull(((Book) libResult.getBooks().get(0)).getAuthor());
     }
 
-    private Library makeLibrary() {
+    @Test
+    public void fieldsWithDefContextAndExplicitContext_extMapping() {
+        mapper = initMapper(new V7ContextMappingExt());
+        testContextTest();
+    }
+
+    static Library makeLibrary() {
         Library library = new Library();
         Author author = new Author("author", 1L);
         Book book1 = new Book(10L, author);
@@ -79,6 +95,22 @@ public class DozerV7ContextBaseTest {
                     .fields("id", "id")
                     .fields("author", "author", excludeContext("test"))
                     .fields("author", "author", oneWay(), context("test"));
+
+            mapping(Author.class, AuthorPrime.class)
+                    .fields("id", "id")
+                    .fields("name", "name", context("full"), context("test"));
+        }
+    }
+
+    private static class V7ContextMappingExt extends BeanMappingBuilder {
+        @Override
+        protected void configure() {
+            mapping(Library.class, LibraryPrime.class)
+                    .fields("books", "books", hintA(Book.class), hintB(BookPrime.class));
+
+            mapping(Book.class, BookPrime.class)
+                    .fields("id", "id")
+                    .fields("author", "author", oneWay().withContext("test"));
 
             mapping(Author.class, AuthorPrime.class)
                     .fields("id", "id")

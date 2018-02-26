@@ -20,7 +20,12 @@ import org.dozer.loader.DozerBuilder;
 /**
  * @author Dmitry Buzdin
  */
-public interface FieldsMappingOption {
+public interface FieldsMappingOption extends HasContextInfo<FieldsMappingOption> {
 
     void apply(DozerBuilder.FieldMappingBuilder fieldMappingBuilder);
+
+    @Override
+    default FieldsMappingOption withContexts(String... context) {
+        return new FieldMappingOptionWrapper(this).withContexts(context);
+    }
 }

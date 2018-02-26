@@ -39,10 +39,7 @@ import org.dozer.propertydescriptor.PropertyDescriptorFactory;
 import org.dozer.util.DozerConstants;
 import org.dozer.util.MappingUtils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Builder API for achivieng the same effect as custom Xml mappings.
@@ -401,6 +398,10 @@ public class DozerBuilder {
 
     public void addExcludeContext(String excludeContext) {
       this.excludeContexts.add(excludeContext);
+    }
+
+    public void addExcludeContexts(Collection<String> collects) {
+      this.excludeContexts.addAll(collects);
     }
   }
 
