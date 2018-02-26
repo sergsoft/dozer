@@ -94,6 +94,14 @@ public final class FieldsMappingOptions {
         };
     }
 
+    public static FieldsMappingOption excludeContext(final String context) {
+        return new FieldsMappingOption() {
+            public void apply(DozerBuilder.FieldMappingBuilder fieldMappingBuilder) {
+                fieldMappingBuilder.addExcludeContext(context);
+            }
+        };
+    }
+
     public static FieldsMappingOption oneWay() {
         return new FieldsMappingOption() {
             public void apply(DozerBuilder.FieldMappingBuilder fieldMappingBuilder) {

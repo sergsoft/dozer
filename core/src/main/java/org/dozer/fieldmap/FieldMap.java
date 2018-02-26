@@ -15,17 +15,16 @@
  */
 package org.dozer.fieldmap;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.dozer.BeanBuilder;
 import org.dozer.MappingException;
 import org.dozer.builder.BuilderUtil;
-import org.dozer.classmap.*;
+import org.dozer.classmap.ClassMap;
+import org.dozer.classmap.DozerClass;
+import org.dozer.classmap.MappingDirection;
+import org.dozer.classmap.RelationshipType;
+import org.dozer.classmap.SupportPriority;
 import org.dozer.config.BeanContainer;
 import org.dozer.factory.DestBeanCreator;
 import org.dozer.propertydescriptor.DozerPropertyDescriptor;
@@ -35,6 +34,11 @@ import org.dozer.util.DozerConstants;
 import org.dozer.util.MappingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import static org.dozer.classmap.SupportPriority.HIGH;
 import static org.dozer.classmap.SupportPriority.LOW;
@@ -69,6 +73,7 @@ public abstract class FieldMap implements Cloneable {
   private boolean copyByReference;
   private boolean copyByReferenceOveridden;
   private Set<String> contexts = new HashSet<>();
+  private Set<String> excludedContexts;
   private boolean defaultContext = false;
 
   // old mapId
@@ -368,7 +373,10 @@ public abstract class FieldMap implements Cloneable {
   }
 
   public SupportPriority supportContext(String context) {
-    if( contexts.contains(context)) {
+    if (excludedContexts != null && excludedContexts.contains(context)) {
+      return NONE;
+    }
+    if(context != null && contexts.contains(context)) {
       return HIGH;
     }
     return isDefaultContext() ? LOW : NONE;
@@ -515,6 +523,7 @@ public abstract class FieldMap implements Cloneable {
             .append("relationshipType", relationshipType)
             .append("removeOrphans", removeOrphans)
             .append("contexts", contexts)
+            .append("excludedContexts", excludedContexts)
             .append("isDefContext", isDefaultContext())
             .append("copyByReference", copyByReference)
             .append("copyByReferenceOveridden", copyByReferenceOveridden)
@@ -549,5 +558,13 @@ public abstract class FieldMap implements Cloneable {
 
   public boolean isApplicable(String context) {
     return !NONE.equals(supportContext(context));
+  }
+
+  public void setExcludedContexts(Set<String> excludedContexts) {
+    this.excludedContexts = excludedContexts;
+  }
+
+  public Set<String> getExcludedContexts() {
+    return excludedContexts;
   }
 }

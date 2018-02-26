@@ -15,11 +15,6 @@
  */
 package org.dozer.loader;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.lang3.StringUtils;
 import org.dozer.CustomConverter;
 import org.dozer.MappingException;
@@ -43,6 +38,11 @@ import org.dozer.fieldmap.MapFieldMap;
 import org.dozer.propertydescriptor.PropertyDescriptorFactory;
 import org.dozer.util.DozerConstants;
 import org.dozer.util.MappingUtils;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Builder API for achivieng the same effect as custom Xml mappings.
@@ -259,6 +259,7 @@ public class DozerBuilder {
     private HintContainer destDeepIndexHintContainer;
     private boolean copyByReference;
     private Set<String> contexts = new HashSet<>();
+    private Set<String> excludeContexts = new HashSet<>();
     private String customConverter;
     private String customConverterId;
     private String customConverterParam;
@@ -385,6 +386,7 @@ public class DozerBuilder {
       }
       result.setContexts(contexts);
       result.setForceContext(forceContext);
+      result.setExcludedContexts(excludeContexts);
 
       result.setCustomConverter(customConverter);
       result.setCustomConverterId(customConverterId);
@@ -395,6 +397,10 @@ public class DozerBuilder {
 
     public void forceContext(String forceContext) {
       this.forceContext = forceContext;
+    }
+
+    public void addExcludeContext(String excludeContext) {
+      this.excludeContexts.add(excludeContext);
     }
   }
 

@@ -15,15 +15,13 @@
  */
 package org.dozer.classmap;
 
-import java.util.Map;
-
 import org.dozer.AbstractDozerTest;
-import org.dozer.MappingException;
 import org.dozer.config.BeanContainer;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
