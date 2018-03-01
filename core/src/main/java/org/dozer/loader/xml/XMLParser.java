@@ -167,7 +167,7 @@ public class XMLParser implements MappingsSource<Document> {
     }
     if (StringUtils.isNotEmpty(getAttribute(ele, RELATIONSHIP_TYPE))) {
       String relationshipTypeValue = getAttribute(ele, RELATIONSHIP_TYPE);
-      RelationshipType relationshipType = RelationshipType.valueOf(relationshipTypeValue);
+      RelationshipType relationshipType = RelationshipType.byXmlName(relationshipTypeValue);
       definitionBuilder.relationshipType(relationshipType);
     }
     if (StringUtils.isNotEmpty(getAttribute(ele, WILDCARD))) {
@@ -369,7 +369,7 @@ public class XMLParser implements MappingsSource<Document> {
     RelationshipType relationshipType = null;
     if (StringUtils.isNotEmpty(getAttribute(ele, RELATIONSHIP_TYPE))) {
       String relationshipTypeValue = getAttribute(ele, RELATIONSHIP_TYPE);
-      relationshipType = RelationshipType.valueOf(relationshipTypeValue);
+      relationshipType = RelationshipType.byXmlName(relationshipTypeValue);
     }
     definitionBuilder.relationshipType(relationshipType);
   }
@@ -426,7 +426,7 @@ public class XMLParser implements MappingsSource<Document> {
         } else if (MAP_EMPTY_STRING.equals(element.getNodeName())) {
           configBuilder.mapEmptyString(Boolean.valueOf(nodeValue));
         } else if (RELATIONSHIP_TYPE.equals(element.getNodeName())) {
-          RelationshipType relationshipType = RelationshipType.valueOf(nodeValue);
+          RelationshipType relationshipType = RelationshipType.byXmlName(nodeValue);
           configBuilder.relationshipType(relationshipType);
         } else if (BEAN_FACTORY.equals(element.getNodeName())) {
           configBuilder.beanFactory(nodeValue);

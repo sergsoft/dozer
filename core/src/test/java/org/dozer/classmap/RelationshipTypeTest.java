@@ -25,9 +25,9 @@ public class RelationshipTypeTest extends AbstractDozerTest{
 
   @Test
   public void testValueOf() {
-    assertNull(RelationshipType.valueOf(""));
-    assertNull(RelationshipType.valueOf(null));
-    assertEquals(RelationshipType.CUMULATIVE, RelationshipType.valueOf("cumulative"));
-    assertEquals(RelationshipType.NON_CUMULATIVE, RelationshipType.valueOf("non-cumulative"));
+    assertNull(RelationshipType.byXmlName(""));
+    assertNull(RelationshipType.byXmlName(null));
+    assertEquals(RelationshipType.CUMULATIVE, RelationshipType.byXmlName("cumulative"));
+    assertEquals(RelationshipType.NON_CUMULATIVE, RelationshipType.byXmlName("non-cumulative"));
   }
 }

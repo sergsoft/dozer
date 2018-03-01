@@ -17,29 +17,28 @@ package org.dozer.classmap;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
+
 /**
  * @author Dmitry Buzdin
  */
-public final class RelationshipType {
+public enum RelationshipType {
 
-  public static final RelationshipType CUMULATIVE = new RelationshipType();
-  public static final RelationshipType NON_CUMULATIVE = new RelationshipType();
+  CUMULATIVE("cumulative"), NON_CUMULATIVE("non-cumulative");
 
-  private static final String CUMULATIVE_VALUE = "cumulative";
-  private static final String NON_CUMULATIVE_VALUE = "non-cumulative";
+  private final String xmlName;
 
-  private RelationshipType() {
+  RelationshipType(String xmlName) {
+    this.xmlName = xmlName;
   }
 
-  public static RelationshipType valueOf(String relationshipType) {
-    if (CUMULATIVE_VALUE.equals(relationshipType)) {
-      return CUMULATIVE;
-    } else if (NON_CUMULATIVE_VALUE.equals(relationshipType)) {
-      return NON_CUMULATIVE;
-    } else if (StringUtils.isEmpty(relationshipType)) {
+  public static RelationshipType byXmlName(String relationshipType) {
+    if (StringUtils.isEmpty(relationshipType)) {
       return null;
     }
-    throw new IllegalStateException("relationship-type should be cumulative or non-cumulative. " + relationshipType);
-  }
 
+    return Arrays.stream(values())
+            .filter(relationship -> relationship.xmlName.equals(relationshipType))
+            .findFirst().orElseThrow(() -> new IllegalStateException("relationship-type should be cumulative or non-cumulative. " + relationshipType));
+  }
 }

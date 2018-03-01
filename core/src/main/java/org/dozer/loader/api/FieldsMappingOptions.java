@@ -98,6 +98,13 @@ public final class FieldsMappingOptions {
         };
     }
 
+    public static FieldsMappingOption none() {
+        return new FieldsMappingOption() {
+            public void apply(DozerBuilder.FieldMappingBuilder fieldMappingBuilder) {
+            }
+        };
+    }
+
     public static FieldsMappingOption oneWay() {
         return new FieldsMappingOption() {
             public void apply(DozerBuilder.FieldMappingBuilder fieldMappingBuilder) {
