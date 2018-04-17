@@ -1,4 +1,4 @@
 package org.dozer;
 
-public class MergeConflictException {
+public class MergeConflictException extends RuntimeException {
 }

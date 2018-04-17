@@ -35,11 +35,14 @@ import org.dozer.fieldmap.FieldMap;
 import org.dozer.fieldmap.GenericFieldMap;
 import org.dozer.fieldmap.HintContainer;
 import org.dozer.fieldmap.MapFieldMap;
+import org.dozer.loader.api.MergePolicy;
 import org.dozer.propertydescriptor.PropertyDescriptorFactory;
 import org.dozer.util.DozerConstants;
 import org.dozer.util.MappingUtils;
 
 import java.util.*;
+
+import static org.dozer.loader.api.MergePolicy.NONE;
 
 /**
  * Builder API for achivieng the same effect as custom Xml mappings.
@@ -266,6 +269,7 @@ public class DozerBuilder {
     private final DestBeanCreator destBeanCreator;
     private final PropertyDescriptorFactory propertyDescriptorFactory;
     private String forceContext;
+    private MergePolicy mergePolicy = NONE;
 
     public FieldMappingBuilder(ClassMap classMap, BeanContainer beanContainer, DestBeanCreator destBeanCreator, PropertyDescriptorFactory propertyDescriptorFactory) {
       this.classMap = classMap;
@@ -388,6 +392,7 @@ public class DozerBuilder {
       result.setCustomConverter(customConverter);
       result.setCustomConverterId(customConverterId);
       result.setCustomConverterParam(customConverterParam);
+      result.setMergePolicy(mergePolicy);
 
       classMap.addFieldMapping(result);
     }
@@ -402,6 +407,14 @@ public class DozerBuilder {
 
     public void addExcludeContexts(Collection<String> collects) {
       this.excludeContexts.addAll(collects);
+    }
+
+    public void setMergePolicy(MergePolicy mergePolicy) {
+      this.mergePolicy = mergePolicy;
+    }
+
+    public MergePolicy getMergePolicy() {
+      return mergePolicy;
     }
   }
 

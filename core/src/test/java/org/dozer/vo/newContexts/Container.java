@@ -8,6 +8,7 @@ public class Container {
     private long id;
     private String string;
     private List<Item> items;
+    private Item lastItem;
 
     public long getId() {
         return id;
@@ -31,6 +32,14 @@ public class Container {
 
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    public Item getLastItem() {
+        return lastItem;
+    }
+
+    public void setLastItem(Item lastItem) {
+        this.lastItem = lastItem;
     }
 
     @Override
@@ -88,6 +97,9 @@ public class Container {
             container.setId(id);
             container.setString(string);
             container.setItems(items);
+            if (items != null && !items.isEmpty()) {
+                container.setLastItem(items.get(items.size() - 1));
+            }
             return container;
         }
     }

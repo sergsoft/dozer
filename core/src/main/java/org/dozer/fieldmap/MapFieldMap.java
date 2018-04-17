@@ -64,6 +64,7 @@ public class MapFieldMap extends FieldMap {
     setSrcHintContainer(fieldMap.getSrcHintContainer());
     setSrcDeepIndexHintContainer(fieldMap.getSrcDeepIndexHintContainer());
     setType(fieldMap.getType());
+    setMergePolicy(fieldMap.getMergePolicy());
   }
 
   private void addContexts(Set<String> contexts) {

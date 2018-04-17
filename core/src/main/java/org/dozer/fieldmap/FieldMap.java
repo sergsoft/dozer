@@ -27,6 +27,7 @@ import org.dozer.classmap.RelationshipType;
 import org.dozer.classmap.SupportPriority;
 import org.dozer.config.BeanContainer;
 import org.dozer.factory.DestBeanCreator;
+import org.dozer.loader.api.MergePolicy;
 import org.dozer.propertydescriptor.DozerPropertyDescriptor;
 import org.dozer.propertydescriptor.GetterSetterPropertyDescriptor;
 import org.dozer.propertydescriptor.PropertyDescriptorFactory;
@@ -42,7 +43,6 @@ import java.util.concurrent.ConcurrentMap;
 
 import static org.dozer.classmap.SupportPriority.HIGH;
 import static org.dozer.classmap.SupportPriority.LOW;
-import static org.dozer.classmap.SupportPriority.NONE;
 
 /**
  * Internal class that represents a field mapping definition. Holds all of the information about a single field mapping
@@ -86,6 +86,7 @@ public abstract class FieldMap implements Cloneable {
 
   private final ConcurrentMap<Class<?>, DozerPropertyDescriptor> srcPropertyDescriptorMap = new ConcurrentHashMap<Class<?>, DozerPropertyDescriptor>(); // For Caching Purposes
   private final ConcurrentMap<Class<?>, DozerPropertyDescriptor> destPropertyDescriptorMap = new ConcurrentHashMap<Class<?>, DozerPropertyDescriptor>();
+  private MergePolicy mergePolicy = MergePolicy.NONE;
 
   public FieldMap(ClassMap classMap, BeanContainer beanContainer, DestBeanCreator destBeanCreator, PropertyDescriptorFactory propertyDescriptorFactory) {
     this.classMap = classMap;
@@ -104,6 +105,10 @@ public abstract class FieldMap implements Cloneable {
 
   public Object getSrcFieldValue(Object runtimeSrcObj) {
     return getSrcPropertyDescriptor(runtimeSrcObj.getClass()).getPropertyValue(runtimeSrcObj);
+  }
+
+  public Object getDestFieldValue(Object runtimeDestObj) {
+    return getDestPropertyDescriptor(runtimeDestObj.getClass()).getPropertyValue(runtimeDestObj);
   }
 
   public void writeDestValue(Object runtimeDestObj, Object destFieldValue) {
@@ -374,12 +379,12 @@ public abstract class FieldMap implements Cloneable {
 
   public SupportPriority supportContext(String context) {
     if (excludedContexts != null && excludedContexts.contains(context)) {
-      return NONE;
+      return SupportPriority.NONE;
     }
     if(context != null && contexts.contains(context)) {
       return HIGH;
     }
-    return isDefaultContext() ? LOW : NONE;
+    return isDefaultContext() ? LOW : SupportPriority.NONE;
   }
 
   public boolean isDefaultContext() {
@@ -529,6 +534,7 @@ public abstract class FieldMap implements Cloneable {
             .append("copyByReferenceOveridden", copyByReferenceOveridden)
             .append("srcTypeHint", srcHintContainer)
             .append("destTypeHint",destHintContainer)
+            .append("mergePolicy", mergePolicy)
             .toString();
   }
 
@@ -557,7 +563,7 @@ public abstract class FieldMap implements Cloneable {
   }
 
   public boolean isApplicable(String context) {
-    return !NONE.equals(supportContext(context));
+    return !SupportPriority.NONE.equals(supportContext(context));
   }
 
   public void setExcludedContexts(Set<String> excludedContexts) {
@@ -566,5 +572,13 @@ public abstract class FieldMap implements Cloneable {
 
   public Set<String> getExcludedContexts() {
     return excludedContexts;
+  }
+
+  public void setMergePolicy(MergePolicy mergePolicy) {
+    this.mergePolicy = mergePolicy;
+  }
+
+  public MergePolicy getMergePolicy() {
+    return mergePolicy;
   }
 }

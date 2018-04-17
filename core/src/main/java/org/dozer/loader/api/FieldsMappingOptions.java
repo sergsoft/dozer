@@ -105,6 +105,10 @@ public final class FieldsMappingOptions {
         };
     }
 
+    public static FieldsMappingOption useMerge(MergePolicy mergePolicy) {
+        return fieldMappingBuilder -> fieldMappingBuilder.setMergePolicy(mergePolicy);
+    }
+
     public static FieldsMappingOption oneWay() {
         return new FieldsMappingOption() {
             public void apply(DozerBuilder.FieldMappingBuilder fieldMappingBuilder) {

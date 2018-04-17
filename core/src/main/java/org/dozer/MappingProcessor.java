@@ -108,12 +108,14 @@ public class MappingProcessor implements Mapper {
   private final DestBeanCreator destBeanCreator;
   private final DestBeanBuilderCreator destBeanBuilderCreator;
 
+  private final FieldMerger fieldMerger;
+
   protected MappingProcessor(ClassMappings classMappings, Configuration globalConfiguration, CacheManager cacheMgr,
                              List<CustomConverter> customConverterObjects,
                              DozerEventManager eventManager, CustomFieldMapper customFieldMapper,
                              Map<String, CustomConverter> customConverterObjectsWithId, BeanContainer beanContainer,
                              DestBeanCreator destBeanCreator, DestBeanBuilderCreator destBeanBuilderCreator,
-                             BeanMappingGenerator beanMappingGenerator, PropertyDescriptorFactory propertyDescriptorFactory) {
+                             BeanMappingGenerator beanMappingGenerator, PropertyDescriptorFactory propertyDescriptorFactory, FieldMerger fieldMerger) {
     this.classMappings = classMappings;
     this.globalConfiguration = globalConfiguration;
     this.customConverterObjects = customConverterObjects;
@@ -124,6 +126,7 @@ public class MappingProcessor implements Mapper {
     this.customConverterObjectsWithId = customConverterObjectsWithId;
     this.beanContainer = beanContainer;
     this.destBeanBuilderCreator = destBeanBuilderCreator;
+    this.fieldMerger = fieldMerger;
     this.classMapBuilder = new ClassMapBuilder(beanContainer, destBeanCreator, beanMappingGenerator, propertyDescriptorFactory);
     this.primitiveConverter = new PrimitiveOrWrapperConverter(beanContainer);
     this.destBeanCreator = destBeanCreator;
@@ -161,6 +164,7 @@ public class MappingProcessor implements Mapper {
    * @return new or updated destination object
    */
   private <T> T mapGeneral(Object srcObj, final Class<T> destClass, final T destObj, final String mapId) {
+    fieldMerger.reset();
     srcObj = MappingUtils.deProxy(srcObj, beanContainer);
 
     Class<T> destType;
@@ -972,6 +976,13 @@ public class MappingProcessor implements Mapper {
     // trim string value if trim-strings="true"
     if (destFieldValue != null && fieldMap.isTrimStrings() && destFieldValue.getClass().equals(String.class)) {
       destFieldValue = ((String) destFieldValue).trim();
+    }
+
+    FieldMerger.MergeResult mergeResult = fieldMerger.bypassValue(destObj, destFieldValue, fieldMap, srcObj);
+    if (mergeResult.isBypass()) {
+      bypass = true;
+    } else {
+      destFieldValue = mergeResult.getNewDestValue();
     }
 
     if (!bypass) {

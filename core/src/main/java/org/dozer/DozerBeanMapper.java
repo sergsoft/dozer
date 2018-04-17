@@ -83,6 +83,7 @@ public class DozerBeanMapper implements Mapper {
   // There are no global caches. Caches are per bean mapper instance
   private final CacheManager cacheManager;
   private DozerEventManager eventManager;
+  private final FieldMerger fieldMerger;
 
   DozerBeanMapper(List<String> mappingFiles,
                   Settings settings,
@@ -98,8 +99,9 @@ public class DozerBeanMapper implements Mapper {
                   CustomFieldMapper customFieldMapper,
                   Map<String, CustomConverter> customConvertersWithId,
                   ClassMappings customMappings,
-                  Configuration globalConfiguration) {
+                  Configuration globalConfiguration, FieldMerger fieldMerger) {
     this.settings = settings;
+    this.fieldMerger = fieldMerger;
     this.cacheManager = new DozerCacheManager();
     this.dozerInitializer = dozerInitializer;
     this.beanContainer = beanContainer;
@@ -162,7 +164,7 @@ public class DozerBeanMapper implements Mapper {
   protected Mapper getMappingProcessor() {
     Mapper processor = new MappingProcessor(customMappings, globalConfiguration, cacheManager, customConverters,
             eventManager, customFieldMapper, customConvertersWithId, beanContainer, destBeanCreator, destBeanBuilderCreator,
-            beanMappingGenerator, propertyDescriptorFactory);
+            beanMappingGenerator, propertyDescriptorFactory, fieldMerger);
 
     return processor;
   }

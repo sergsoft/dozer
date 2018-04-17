@@ -5,6 +5,9 @@ public class ItemDTO {
     private String name;
     private int price;
 
+    public ItemDTO() {
+    }
+
     public long getId() {
         return id;
     }

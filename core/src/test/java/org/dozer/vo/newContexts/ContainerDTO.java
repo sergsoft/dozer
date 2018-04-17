@@ -7,6 +7,16 @@ public class ContainerDTO {
     private String string;
     private List<ItemDTO> items;
 
+    public ItemDTO getLastItem() {
+        return lastItem;
+    }
+
+    public void setLastItem(ItemDTO lastItem) {
+        this.lastItem = lastItem;
+    }
+
+    private ItemDTO lastItem;
+
     public long getId() {
         return id;
     }

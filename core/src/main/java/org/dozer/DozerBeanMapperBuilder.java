@@ -87,6 +87,7 @@ public final class DozerBeanMapperBuilder {
     private ElementReader elementReader;
     private ClassMappings customMappings;
     private Configuration globalConfiguration;
+    private FieldMerger fieldMerger;
 
     private DozerBeanMapperBuilder() {
     }
@@ -368,7 +369,7 @@ public final class DozerBeanMapperBuilder {
      * <p>
      * By default, no converters with IDs are registered.
      *
-     * @param customConvertersWithId   converters to be used by mapper.
+     * @param customConvertersWithId converters to be used by mapper.
      * @return modified builder to be further configured.
      */
     public DozerBeanMapperBuilder withCustomConvertersWithIds(Map<String, CustomConverter> customConvertersWithId) {
@@ -452,6 +453,11 @@ public final class DozerBeanMapperBuilder {
         return this;
     }
 
+    public DozerBeanMapperBuilder withFieldMerger(FieldMerger fieldMerger) {
+        this.fieldMerger = fieldMerger;
+        return this;
+    }
+
     /**
      * Creates an instance of {@link Mapper}. Mapper is configured according to the current builder state.
      * <p>
@@ -490,23 +496,24 @@ public final class DozerBeanMapperBuilder {
         mappingsFileData.addAll(createMappingsWithBuilders(beanContainer, destBeanCreator, propertyDescriptorFactory));
 
         loadCustomMappings(mappingsFileData, xmlParserFactory, xmlParser,
-                           beanContainer, propertyDescriptorFactory, beanMappingGenerator, destBeanCreator);
+                beanContainer, propertyDescriptorFactory, beanMappingGenerator, destBeanCreator);
 
         return new DozerBeanMapper(mappingFiles,
-                                   settings,
-                                   dozerInitializer,
-                                   beanContainer,
-                                   destBeanCreator,
-                                   destBeanBuilderCreator,
-                                   beanMappingGenerator,
-                                   propertyDescriptorFactory,
-                                   customConverters,
-                                   mappingsFileData,
-                                   eventListeners,
-                                   customFieldMapper,
-                                   customConvertersWithId,
-                                   customMappings,
-                                   globalConfiguration);
+                settings,
+                dozerInitializer,
+                beanContainer,
+                destBeanCreator,
+                destBeanBuilderCreator,
+                beanMappingGenerator,
+                propertyDescriptorFactory,
+                customConverters,
+                mappingsFileData,
+                eventListeners,
+                customFieldMapper,
+                customConvertersWithId,
+                customMappings,
+                globalConfiguration,
+                fieldMerger != null ? fieldMerger : new DefaultFieldMerger());
     }
 
     private List<MappingFileData> createMappingsWithBuilders(BeanContainer beanContainer, DestBeanCreator destBeanCreator, PropertyDescriptorFactory propertyDescriptorFactory) {
